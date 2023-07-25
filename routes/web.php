@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SearchProductsController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -20,12 +22,11 @@ Route::get('/', [SearchProductsController::class, 'index']);
 
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart', [CartController::class, 'store']);
+Route::patch('/cart/{id}', [CartController::class, 'update']);
+Route::delete('/cart/{id}', [CartController::class, 'destroy']);
 
 
+Route::get('/checkout', [CheckoutController::class, 'index']);
+Route::post('/checkout', [CheckoutController::class, 'create']);
 
-Route::get('/checkout', function () {
-    return view('checkout');
-});
-Route::get('/summary', function () {
-    return view('summary');
-});
+Route::get('/summary', [OrderController::class, 'index']);

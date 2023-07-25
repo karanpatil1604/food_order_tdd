@@ -10,8 +10,18 @@ class CartController extends Controller
 {
     public function index()
     {
-        $items = Product::get();
-        return view('cart', compact('items'));
+        $items = Product::whereIn('id', collect(session('cart'))->pluck('id'))->get();
+        $cart_items = collect(session('cart'))->map(function ($row, $index) use ($items) {
+
+            return [
+                'id' => $row['id'],
+                'qty' => $row['qty'],
+                'name' => $items[$index]->name,
+                'cost' => $items[$index]->cost,
+                'image' => $items[$index]->image,
+            ];
+        })->toArray();
+        return view('cart', compact('cart_items'));
     }
 
 
@@ -25,6 +35,37 @@ class CartController extends Controller
             ]);
         }
         // dd(session());
+        return redirect('/cart');
+    }
+
+
+
+    public function update()
+    {
+
+        $id = request('id');
+        $qty = request('qty');
+
+        $cart_items = collect(session('cart'))->map(function ($row, $key) use ($id, $qty) {
+            if ($row['id'] == $id) {
+                return ['id' => $row['id'], 'qty' => $qty];
+            }
+            return $row;
+        })->toArray();
+        session(['cart' => $cart_items]);
+        return redirect('/cart');
+    }
+
+
+
+
+    public function destroy()
+    {
+        $id = request('id');
+        $items = collect(session('cart'))->filter(function ($item) use ($id) {
+            return $item['id'] != $id;
+        })->values()->toArray();
+        session(['cart' => $items]);
         return redirect('/cart');
     }
 }
