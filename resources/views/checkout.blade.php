@@ -25,12 +25,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($checkout_items as $item)
+
+                    @foreach ($checkout_items as $_item)
                         <tr>
-                            <td>{{ $item['name'] }}</td>
-                            <td>Rs. {{ $item['cost'] }}</td>
-                            <td>{{ $item['qty'] }}</td>
-                            <td>Rs. {{ $item['subtotal'] }}</td>
+                            <td>{{ $_item['name'] }}</td>
+                            <td>Rs.{{ $_item['cost'] }}</td>
+                            <td>{{ $_item['qty'] }}</td>
+                            <td>Rs.{{ $_item['subtotal'] }}</td>
                         </tr>
                     @endforeach
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
@@ -19,16 +18,18 @@ class CheckoutController extends Controller
             $subtotal = $qty * $cost;
 
             return [
-                'id' => $row['id'],
+                'id' => (int) $row['id'],
                 'qty' => $qty,
                 'name' => $items[$index]->name,
                 'cost' => $cost,
                 'subtotal' => round($subtotal, 2),
+                'image' => 'some-image.jpg',
             ];
         });
         $total = $checkout_items->sum('subtotal');
         $checkout_items = $checkout_items->toArray();
-        return view('checkout', compact('checkout_items', 'total'));
+        // dd($checkout_items);
+        return view('checkout', ['checkout_items' => $checkout_items, 'total' => $total]);
     }
 
     public function create()

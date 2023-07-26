@@ -10,21 +10,21 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
 
 
-    // public function tearDown(): void
-    // {
+    public function tearDown(): void
+    {
 
-    //     $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = 'food_order_test';"; // replace food_order_test with the name of your test database
+        $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = 'testing';"; // replace food_order_test with the name of your test database
 
-    //     DB::statement("SET FOREIGN_KEY_CHECKS = 0;");
-    //     $tables = DB::select($sql);
+        DB::statement("SET FOREIGN_KEY_CHECKS = 0;");
+        $tables = DB::select($sql);
 
-    //     array_walk($tables, function ($table) {
-    //         if ($table->TABLE_NAME != 'migrations') {
-    //             DB::table($table->TABLE_NAME)->truncate();
-    //         }
-    //     });
+        array_walk($tables, function ($table) {
+            if ($table->TABLE_NAME != 'migrations') {
+                DB::table($table->TABLE_NAME)->truncate();
+            }
+        });
 
-    //     DB::statement("SET FOREIGN_KEY_CHECKS = 1;");
-    //     parent::tearDown();
-    // }
+        DB::statement("SET FOREIGN_KEY_CHECKS = 1;");
+        parent::tearDown();
+    }
 }

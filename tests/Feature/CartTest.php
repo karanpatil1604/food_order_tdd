@@ -116,12 +116,13 @@ class CartTest extends TestCase
             'cost' => 3.2,
         ]);
 
+        // Action 
         session(['cart' => [
             ['id' => 2, 'qty' => 1],
             ['id' => 3, 'qty' => 3],
         ]]);
 
-        // Action 
+        // Assert 
         $this->delete('/cart/2')
             ->assertRedirect('/cart')
             ->assertSessionHasNoErrors()

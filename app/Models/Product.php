@@ -12,4 +12,11 @@ class Product extends Model
         'name', 'cost', 'image'
     ];
     protected $table = 'products';
+
+    public static function mathces($query_str)
+    {
+        return self::when($query_str, function ($query, $query_str) {
+            return $query->where('name', 'LIKE', "%{$query_str}%");
+        });
+    }
 }

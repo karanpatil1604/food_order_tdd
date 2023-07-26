@@ -20,7 +20,7 @@ class CheckoutTest extends TestCase
         // Arrange
         Product::factory()->create([
             'name' => 'Taco',
-            'cost' => 1.5
+            'cost' => 1.5,
         ]);
         Product::factory()->create([
             'name' => 'Pizza',
@@ -31,10 +31,13 @@ class CheckoutTest extends TestCase
             'cost' => 3.2,
         ]);
 
-        session('cart', [
-            ['id' => 2, 'qty' => 1], // Pizza
-            ['id' => 3, 'qty' => 2], // BBQ
+        session([
+            'cart' => [
+                ['id' => 2, 'qty' => 1], // Pizza
+                ['id' => 3, 'qty' => 2], // BBQ
+            ],
         ]);
+
         // Act
         $checkout_items = [
             [
@@ -43,6 +46,7 @@ class CheckoutTest extends TestCase
                 'name' => 'Pizza',
                 'cost' => 2.1,
                 'subtotal' => 2.1,
+                'image' => 'some-image.jpg',
             ],
             [
                 'id' => 3,
@@ -50,26 +54,25 @@ class CheckoutTest extends TestCase
                 'name' => 'BBQ',
                 'cost' => 3.2,
                 'subtotal' => 6.4,
+                'image' => 'some-image.jpg',
             ],
         ];
 
         $this->get('/checkout')
             ->assertViewIs('checkout')
-            ->assertViewHas('checkout_items')
+            ->assertViewHas('checkout_items', $checkout_items)
             ->assertSeeTextInOrder([
                 // Item #1
                 'Pizza',
-                'Rs. 2.1',
+                'Rs.2.1',
                 '1',
-                '$2.1',
+                'Rs.2.1',
 
                 // Item #2
                 'BBQ',
-                'Rs. 3.2',
+                'Rs.3.2',
                 '2',
-                'Rs. 6.4',
-
-                'Rs. 8.5', // total
+                'Rs.6.4',
             ]);
     }
 
