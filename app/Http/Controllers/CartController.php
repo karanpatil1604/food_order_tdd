@@ -4,68 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Services\CartService;
 use SebastianBergmann\Complexity\Complexity;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(CartService $cart)
     {
-        $items = Product::whereIn('id', collect(session('cart'))->pluck('id'))->get();
-        $cart_items = collect(session('cart'))->map(function ($row, $index) use ($items) {
-
-            return [
-                'id' => $row['id'],
-                'qty' => $row['qty'],
-                'name' => $items[$index]->name,
-                'cost' => $items[$index]->cost,
-                'image' => $items[$index]->image,
-            ];
-        })->toArray();
+        $cart_items = $cart->get();
         return view('cart', compact('cart_items'));
     }
 
-
-    public function store()
+    public function store(CartService $cart)
     {
-        $existing = collect(session('cart'))->first(fn ($row, $key) => $row['id'] === request('id'));
-        if (!$existing) {
-            session()->push('cart', [
-                'id' => request('id'),
-                'qty' => 1,
-            ]);
-        }
-        // dd(session());
+        $cart->add(request('id'));
         return redirect('/cart');
     }
 
-
-
-    public function update()
+    public function update(CartService $cart)
     {
-
-        $id = request('id');
-        $qty = request('qty');
-
-        $cart_items = collect(session('cart'))->map(function ($row, $key) use ($id, $qty) {
-            if ($row['id'] == $id) {
-                return ['id' => $row['id'], 'qty' => $qty];
-            }
-            return $row;
-        })->toArray();
-        session(['cart' => $cart_items]);
+        $cart->update(request('id'), request('qty'));
         return redirect('/cart');
     }
 
-
-
-
-    public function destroy()
+    public function destroy(CartService $cart)
     {
-        $id = request('id');
-        $items = collect(session('cart'))->filter(function ($item) use ($id) {
-            return $item['id'] != $id;
-        })->values()->toArray();
-        session(['cart' => $items]);
+        $cart->remove(request('id'));
         return redirect('/cart');
     }
 }

@@ -79,14 +79,16 @@ class CartTest extends TestCase
                 'name' => "Taco",
                 'qty' => 1,
                 'image' => 'some-image.jpg',
-                'cost' => 1.5
+                'cost' => 1.5,
+                'subtotal' => 1.5,
             ],
             [
                 'id' => 3,
                 'name' => "BBQ",
                 'qty' => 1,
                 'image' => 'some-image.jpg',
-                'cost' => 3.2
+                'cost' => 3.2,
+                'subtotal' => 3.2,
             ],
         ];
 
